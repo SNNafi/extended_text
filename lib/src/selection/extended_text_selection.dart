@@ -148,13 +148,14 @@ class ExtendedTextSelection extends StatefulWidget {
   ExtendedTextSelectionState createState() => ExtendedTextSelectionState();
 }
 
-class ExtendedTextSelectionState extends State<ExtendedTextSelection>
-    //with TextEditingActionTarget
+class ExtendedTextSelectionState
+    extends State<ExtendedTextSelection> //with TextEditingActionTarget
     implements
         ExtendedTextSelectionGestureDetectorBuilderDelegate,
         TextSelectionDelegate,
         TextInputClient {
   final GlobalKey _renderParagraphKey = GlobalKey();
+
   ExtendedRenderParagraph? get _renderParagraph =>
       _renderParagraphKey.currentContext!.findRenderObject()
           as ExtendedRenderParagraph?;
@@ -170,13 +171,16 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
 
   FocusNode? _focusNode;
   FocusAttachment? _focusAttachment;
+
   FocusNode get _effectiveFocusNode => _focusNode ??= FocusNode();
+
   bool get _hasFocus => _effectiveFocusNode.hasFocus;
 
   late final Map<Type, Action<Intent>> _actions = <Type, Action<Intent>>{
     SelectAllTextIntent: _makeOverridable(_SelectAllAction(this)),
     CopySelectionTextIntent: _makeOverridable(_CopySelectionAction(this)),
   };
+
   @override
   void initState() {
     super.initState();
@@ -373,10 +377,10 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
               onDidGainAccessibilityFocus: handleDidGainAccessibilityFocus,
               child: ExtendedRichText(
                 textAlign: widget.textAlign!,
-                textDirection: widget
-                    .textDirection, // RichText uses Directionality.of to obtain a default if this is null.
-                locale: widget
-                    .locale, // RichText uses Localizations.localeOf to obtain a default if this is null
+                textDirection: widget.textDirection,
+                // RichText uses Directionality.of to obtain a default if this is null.
+                locale: widget.locale,
+                // RichText uses Localizations.localeOf to obtain a default if this is null
                 softWrap: widget.softWrap!,
                 overflow: widget.overflow!,
                 textScaleFactor: widget.textScaleFactor!,
@@ -483,6 +487,7 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
   }
 
   late TextEditingValue _value;
+
   @override
   TextEditingValue get textEditingValue => _value;
 
@@ -609,6 +614,7 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
   /// - cmd/ctrl+a to select all.
   /// - Changing the selection using a physical keyboard.
   bool get _shouldCreateInputConnection => kIsWeb;
+
   bool get _hasInputConnection =>
       _textInputConnection != null && _textInputConnection!.attached;
 
@@ -843,6 +849,17 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
 
   @override
   void removeTextPlaceholder() {}
+
+  @override
+  void didChangeInputControl(
+      TextInputControl? oldControl, TextInputControl? newControl) {
+    // TODO: implement performSelector
+  }
+
+  @override
+  void performSelector(String selectorName) {
+    // TODO: implement performSelector
+  }
 }
 
 class _CopySelectionAction extends ContextAction<CopySelectionTextIntent> {
